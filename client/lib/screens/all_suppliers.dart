@@ -1,7 +1,6 @@
 import 'package:app/utils/stub_channel.dart';
 import 'package:app/utils/supplier_data.dart';
-import 'package:app/widgets/large_submit_screen.dart';
-import 'package:app/widgets/large_supplier_screen.dart';
+
 import 'package:app/widgets/medium_submit.dart';
 import 'package:app/widgets/medium_supplier.dart';
 import 'package:app/widgets/small_all_suppliers.dart';
@@ -65,6 +64,7 @@ class _AllSuppliersState extends State<AllSuppliers> {
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKeyFive =
       GlobalKey<RefreshIndicatorState>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -129,15 +129,21 @@ class _AllSuppliersState extends State<AllSuppliers> {
                                     // getOneSupplier(value).then((value) {
                                     //   print('reached here');
                                     // });
-                                    setState(() {
-                                      searchedProducts = searchedProducts!
-                                          .where((element) =>
-                                              element.name1
-                                                  .toLowerCase()
-                                                  .contains(value) ||
-                                              element.name2.contains(value))
-                                          .toList();
-                                    });
+                                    if (value.isNotEmpty) {
+                                      setState(() {
+                                        isSearchOn = true;
+                                        searchedProducts = searchedProducts!
+                                            .where((element) => element
+                                                .address.firstName
+                                                .toLowerCase()
+                                                .contains(value))
+                                            .toList();
+                                      });
+                                    } else {
+                                      setState(() {
+                                        isSearchOn = false;
+                                      });
+                                    }
                                   },
 
                                   cursorColor: Colors.black54,
@@ -145,7 +151,7 @@ class _AllSuppliersState extends State<AllSuppliers> {
                                       GoogleFonts.prompt(color: Colors.black54),
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.search),
-                                      hintText: 'search by uuid',
+                                      hintText: 'search by name1',
                                       hintStyle: GoogleFonts.prompt(
                                           color: Colors.black54),
                                       border: InputBorder.none),
@@ -207,8 +213,9 @@ class _AllSuppliersState extends State<AllSuppliers> {
                                                 .withOpacity(0.3),
                                           );
                                         } else {
-                                          searchedProducts =
-                                              snapshot.data!.supplier;
+                                          searchedProducts = !isSearchOn
+                                              ? snapshot.data!.supplier
+                                              : searchedProducts;
                                           return SmallAllSuppliersScreen(
                                             res: searchedProducts!,
                                           );

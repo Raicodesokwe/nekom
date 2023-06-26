@@ -1,3 +1,4 @@
+import 'package:app/screens/search_suppliers.dart';
 import 'package:app/widgets/second_homebox.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -91,7 +92,10 @@ class _SecondViewHomeState extends State<SecondViewHome> {
                         secondHomeList[index].name == 'All suppliers'
                             ? Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => AllSuppliers()))
-                            : null;
+                            : secondHomeList[index].name == 'Search supplier'
+                                ? Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => SearchSuppliers()))
+                                : null;
                       },
                       child: SecondHomeBox(
                           name: secondHomeList[index].name,
